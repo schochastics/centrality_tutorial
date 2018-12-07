@@ -1,0 +1,14 @@
+--- 
+title: "An Introduction to Network Centrality"
+subtitle: "with Applications in R"
+author: "David Schoch"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: []
+biblio-style: apalike
+link-citations: yes
+description: ""
+---
+
+# Preface {-}
