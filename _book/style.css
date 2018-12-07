@@ -12,3 +12,11 @@ pre {
 pre code {
   white-space: inherit;
 }
+
+.Rhint{
+  border-width:2px;  
+  border-left-style:solid;
+  border-color: #4B0080;
+  padding-left: 12px;
+  font-style: italic;
+}

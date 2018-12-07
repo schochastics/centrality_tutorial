@@ -1,0 +1,149 @@
+# Centrality Indices {#indices}
+The purpose of network centrality is to identify important actors or entities in a network. 
+Structural importance is determined by so called *measures of centrality*, 
+commonly defined in terms of indices $c: V \to \mathbb{R}$ interpreted as
+$$
+c(u) > c(v) \iff u \text{ is more central than } v.
+$$
+Since the meaning of structural importance is by no means unambiguous, a
+vast amount of different indices have been introduced over time. In addition, any mapping
+ $c: V \to \mathbb{R}$ induces a ranking of nodes, but not every such ranking might
+represent a plausible concept of structural importance. 
+
+## Degree
+
+Degree centrality is the most simple form of a centrality index. It is defined as
+$$
+c_d(u) = \{v : \{u,v\} \in E\} = \lvert N(u) \rvert
+$$
+Degree centrality is a purely *local* measure since it only depends on the direct
+neighborhood of a node. A simple application example is popularity in friend-
+ship networks, i.e. "who has the most friends?". The definition of degree centrality can easily be 
+adapted for directed and weighted networks. For directed networks,
+$$
+c_d^+(u)=\{v : (u,v) \in E\} = \lvert N^+(u) \rvert \quad \text{and} \quad 
+c_d^-(u)=\{v : (v,u) \in E\} = \lvert N^-(u) \rvert
+$$
+are the *out-degree* and *in-degree*, respectively. *Weighted degree*, sometimes also refered to as *strength*, is defined as
+$$
+c_{wd}(u)=\sum_{v \in N(u)} w_{uv}.
+$$
+
+## Betweenness (and variants)
+Betweenness was independently developed by @a-rdg-71 and @f-smcbb-77 and is
+an extension of *stress centrality*, introduced by @s-spcn-53. Shimbel assumes that
+the number of shortest paths containing a node $u$ is an estimate for the amount
+of "stress" the node has to sustain in a network. The more shortest
+paths run through a node the more central it is. Formally, stress centrality is
+defined as
+$$
+c_{stress}(u)=\sum\limits_{s,t \in V} \sigma(s,t\lvert u),
+$$
+where $\sigma(s,t\lvert u)$ is the number of shortest paths from $s$ to $t$ passing 
+through $u$. Instead of the absolute number of shortest paths, betweenness centrality 
+quantifies their relative number. The relative count is given by
+$$
+\delta(s,t\lvert u)= \frac{\sigma(s,t\lvert u)}{\sigma(s,t)},
+$$
+where $\sigma(s,t)$ is the total number of shortest paths connecting $s$ and $t$.
+The expression $\delta(s,t\lvert u)$ can be interpreted as the extent to
+which $u$ controls the communication between $s$ and $t$. Betweenness is then defined
+as
+$$
+c_b(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)
+$$
+The interpretation of betweenness is not only restricted to communication.
+More generally, betweenness quantifies the influence of vertices on the trans-
+fer of items or information through the network with the assumption that it
+follows shortest paths. Many different variants of shortest path betweenness
+have been proposed to incorporate additional assumptions, e.g. the specific lo-
+cation of a vertex $u$ on a shortest $s,t$-path or its length. Some of these variants
+are given in the following table.
+
+| | |
+|------------|--|
+|proximal source|$c_{bs}(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)\cdot A_{su}$|
+|proximal target|$c_{bt}(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)\cdot A_{ut}$|
+|k-bounded distance|$c_{bk}(u) = \sum\limits_{dist(s,t)\leq k} \delta(s,t\lvert u)$|
+|length-scaled|$c_{bd}(u) = \sum\limits_{s,t \in V} \frac{\delta(s,t\lvert u)}{dist(s,t)}$|
+|linearly-scaled|$c_{bl}(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)\frac{dist(s,u)}{dist(s,t)}$|
+
+Details on these variants can be found in @b-vsbctgc-08.
+Other variants of the betweenness concept rely on different assumptions of transfer in networks
+besides shortest paths.
+
+A measure based on network flow was defined by @fbw-cvgmbbnf-91.
+The authors assume information as a flow process and assign to each edge a non-negative
+value representing the maximum amount of information that can be passed
+between the endpoints. The aim is then to measure the extent to which the
+maximum flow between two vertices $s$ and $t$ depends on a vertex $u$. Denote by
+$f(s,t)$ the maximum $(s,t)$-flow w.r.t. constraints imposed by edge capacities
+and the amount of flow which must go through $u$ by $f( s, t \lvert u )$ . Similar to
+shortest path betweenness, *flow betweenness* is then defined as
+$$
+c_f(u)=\sum\limits_{s,t \in V} \frac{f(s,t\lvert u)}{f(s,t)}.
+$$
+The index was introduced as a betweenness variant for weighted networks
+but it can easily applied to unweighted ones. In the case of simple undirected and 
+unweighted networks, the maximum $(s, t)$-flow is equivalent to the
+number of edge disjoint $(s,t)$-paths and $f(s,t|u)$ is the number of
+paths $u$ lies on.
+
+A variant based on walks instead of paths was proposed by @n-mbcbrw-05. His *random walk betweenness* 
+calculates the expected number of times a random $(s,t)$-walk passes
+through a vertex $u$, averaged over all $s$ and $t$. Newman shows, that his variant
+of betweenness can also be calculated with a current-flow analogy by viewing
+a graph as an electrical network. Random walk betweenness is then equiva-
+lent to the amount of current that flows through $u$. The index is thus also known as 
+*current flow betweenness*. Details and formal definitions of his versions can be found in
+the literature [@n-mbcbrw-05; @bf-cmbcf-05].
+
+Two variants based on the *randomzed shortest path* (RSP) framework [@ysms-fdmngbscd-08; @safy-rsptrm-09; @kss-dtrspcgnd-14] were proposed by @klss-tbcmbrsp-16. The variants are refered to as
+*simple RSP betweenness* and *RSP net betweenness*. The derivation of both indices is 
+rather involved and goes beyond the scope of this tutorial. The interested reader should consult the original work for details. One aspect worth mentioning, though, is that both variants include a tuning parameter $\beta$. 
+Both variants converge to the traditional version of betweennes for $\beta \to \infty$. For $\beta \to 0$,
+simple RSP betweenness converges to the expected number of visits to a node over all absorbing walks with respect to the unbiased random walk probabilities. This means for undirected networks, 
+that the index converges to degree. RSP net betweenness, on the other hand, converges to Newmann's
+random walk betweenness.
+
+All variants of betweenness can be described in a more general form considering a 
+flow of information analogy. Depending on the assumption of how
+information is ‘flowing’ between $s$ and $t$, the set $P(s, t)$ contains all
+possible information channels to transmit the piece of information.
+This set might contain all shortest $( s, t )$-paths if the information has to be trans-
+mitted as fast as possible or all random $(s, t)$-walks when the delivery time
+does not matter. In principle, any kind of trajectory on a graph can be
+thought of as an information channel. The set $P( s, t \lvert u )$ contains all information
+channels where the vertex $u$ is in a position to control the information flow.
+For shortest path betweenness, $u$ is in a controlling position if it is part of
+an information channel and for proximal target betweenness if it presents the
+information to the target $t$. In the former case $P( s, t \lvert u )$ comprises all elements
+of $P(s, t)$ that contain $u$ as an intermediary and in the latter all elements that
+contain the edge $(u,t)$ . Again, the position of control could be defined as any
+location on a trajectory. A measure of relative betweenness is then defined with
+aggregation rules over the two specified sets, commonly the fraction of their
+cardinalities. This fraction can also be weighted according to specified rules,
+e.g. as in length scaled betweenness. Aggregating over all possible sources and
+targets, we can thus define a *generic betweenness* index as
+$$
+c_{bg}(u) = \sum\limits_{s,t \in V}\frac{\lvert P(s,t\lvert u) \rvert}{\lvert P(s,t) \rvert} \cdot w(s,t).
+$$
+Thus, many other variants are possible, for instance also $k$-betweenness mentioned by @be-gpc-06,
+where $P( s, t )$ is the set of all $( s, t )$-paths of length at most $k$.
+
+There exist many more betweenness-like indices that where not covered here, but are listed below in no
+particular order:
+
+- *communicability betweenness* based on the matrix exponential [@ehh-cbcn-09]
+- $\alpha$ and $\beta$ betweenness, which are closely related to current flow betweenness [@alms-acfbc-13; @amt-bcfcwn-15], 
+- *ranking betweenness*, which combines betweenness with the idea of PageRank [@aotv-nbcmbarnn-14]
+- range-limited forms of betweenness [@elct-rcmcn-12]
+- *bridgeness* [@jmkvvjcmf-dgbn-16]
+- *super mediator* [@skom-sm-ncmniidsn-16]
+- *BridgeRank* [@sam-bnfcmblsn-18]
+
+## Closeness (and variants)
+
+## Eigenvector (and variants)
+
+## Others

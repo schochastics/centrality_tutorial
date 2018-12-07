@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>1 Introduction | An Introduction to Network Centrality</title>
-  <meta name="description" content="1 Introduction | An Introduction to Network Centrality>
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <title>An Introduction to Network Centrality</title>
+  <meta name="description" content="An Introduction to Network Centrality">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
-  <meta property="og:title" content="1 Introduction | An Introduction to Network Centrality />
+  <meta property="og:title" content="An Introduction to Network Centrality" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1 Introduction | An Introduction to Network Centrality />
+  <meta name="twitter:title" content="An Introduction to Network Centrality" />
   
   
   
@@ -33,10 +33,9 @@
   
   
 <link rel="prev" href="index.html">
-
+<link rel="next" href="indices.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -69,6 +68,13 @@
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="indices.html"><a href="indices.html"><i class="fa fa-check"></i><b>2</b> Centrality Indices</a><ul>
+<li class="chapter" data-level="2.1" data-path="indices.html"><a href="indices.html#degree"><i class="fa fa-check"></i><b>2.1</b> Degree</a></li>
+<li class="chapter" data-level="2.2" data-path="indices.html"><a href="indices.html#betweenness-and-variants"><i class="fa fa-check"></i><b>2.2</b> Betweenness (and variants)</a></li>
+<li class="chapter" data-level="2.3" data-path="indices.html"><a href="indices.html#closeness-and-variants"><i class="fa fa-check"></i><b>2.3</b> Closeness (and variants)</a></li>
+<li class="chapter" data-level="2.4" data-path="indices.html"><a href="indices.html#eigenvector-and-variants"><i class="fa fa-check"></i><b>2.4</b> Eigenvector (and variants)</a></li>
+<li class="chapter" data-level="2.5" data-path="indices.html"><a href="indices.html#others"><i class="fa fa-check"></i><b>2.5</b> Others</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -112,8 +118,8 @@
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="indices.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -133,7 +139,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapaper": false,
+"instapper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -146,10 +152,6 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"history": {
-"link": null,
-"text": null
-},
 "download": ["centrality_tutorial.pdf", "centrality_tutorial.epub"],
 "toc": {
 "collapse": "subsection"
@@ -158,6 +160,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

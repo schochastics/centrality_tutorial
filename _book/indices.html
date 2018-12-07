@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>An Introduction to Network Centrality</title>
+  <meta name="description" content="An Introduction to Network Centrality">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="An Introduction to Network Centrality" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="An Introduction to Network Centrality" />
+  
+  
+  
+
+<meta name="author" content="David Schoch">
+
+
+<meta name="date" content="2018-12-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="intro.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Network Centrality</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="indices.html"><a href="indices.html"><i class="fa fa-check"></i><b>2</b> Centrality Indices</a><ul>
+<li class="chapter" data-level="2.1" data-path="indices.html"><a href="indices.html#degree"><i class="fa fa-check"></i><b>2.1</b> Degree</a></li>
+<li class="chapter" data-level="2.2" data-path="indices.html"><a href="indices.html#betweenness-and-variants"><i class="fa fa-check"></i><b>2.2</b> Betweenness (and variants)</a></li>
+<li class="chapter" data-level="2.3" data-path="indices.html"><a href="indices.html#closeness-and-variants"><i class="fa fa-check"></i><b>2.3</b> Closeness (and variants)</a></li>
+<li class="chapter" data-level="2.4" data-path="indices.html"><a href="indices.html#eigenvector-and-variants"><i class="fa fa-check"></i><b>2.4</b> Eigenvector (and variants)</a></li>
+<li class="chapter" data-level="2.5" data-path="indices.html"><a href="indices.html#others"><i class="fa fa-check"></i><b>2.5</b> Others</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Network Centrality</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="indices" class="section level1">
+<h1><span class="header-section-number">2</span> Centrality Indices</h1>
+<p>The purpose of network centrality is to identify important actors or entities in a network.
+Structural importance is determined by so called <em>measures of centrality</em>,
+commonly defined in terms of indices <span class="math inline">\(c: V \to \mathbb{R}\)</span> interpreted as
+<span class="math display">\[
+c(u) &gt; c(v) \iff u \text{ is more central than } v.
+\]</span>
+Since the meaning of structural importance is by no means unambiguous, a
+vast amount of different indices have been introduced over time. In addition, any mapping
+<span class="math inline">\(c: V \to \mathbb{R}\)</span> induces a ranking of nodes, but not every such ranking might
+represent a plausible concept of structural importance.</p>
+<div id="degree" class="section level2">
+<h2><span class="header-section-number">2.1</span> Degree</h2>
+<p>Degree centrality is the most simple form of a centrality index. It is defined as
+<span class="math display">\[
+c_d(u) = \{v : \{u,v\} \in E\} = \lvert N(u) \rvert
+\]</span>
+Degree centrality is a purely <em>local</em> measure since it only depends on the direct
+neighborhood of a node. A simple application example is popularity in friend-
+ship networks, i.e. “who has the most friends?”. The definition of degree centrality can easily be
+adapted for directed and weighted networks. For directed networks,
+<span class="math display">\[
+c_d^+(u)=\{v : (u,v) \in E\} = \lvert N^+(u) \rvert \quad \text{and} \quad 
+c_d^-(u)=\{v : (v,u) \in E\} = \lvert N^-(u) \rvert
+\]</span>
+are the <em>out-degree</em> and <em>in-degree</em>, respectively. <em>Weighted degree</em>, sometimes also refered to as <em>strength</em>, is defined as
+<span class="math display">\[
+c_{wd}(u)=\sum_{v \in N(u)} w_{uv}.
+\]</span></p>
+</div>
+<div id="betweenness-and-variants" class="section level2">
+<h2><span class="header-section-number">2.2</span> Betweenness (and variants)</h2>
+<p>Betweenness was independently developed by <span class="citation">Anthonisse (<a href="#ref-a-rdg-71">1971</a>)</span> and <span class="citation">Freeman (<a href="#ref-f-smcbb-77">1977</a>)</span> and is
+an extension of <em>stress centrality</em>, introduced by <span class="citation">Shimbel (<a href="#ref-s-spcn-53">1953</a>)</span>. Shimbel assumes that
+the number of shortest paths containing a node <span class="math inline">\(u\)</span> is an estimate for the amount
+of “stress” the node has to sustain in a network. The more shortest
+paths run through a node the more central it is. Formally, stress centrality is
+defined as
+<span class="math display">\[
+c_{stress}(u)=\sum\limits_{s,t \in V} \sigma(s,t\lvert u),
+\]</span>
+where <span class="math inline">\(\sigma(s,t\lvert u)\)</span> is the number of shortest paths from <span class="math inline">\(s\)</span> to <span class="math inline">\(t\)</span> passing
+through <span class="math inline">\(u\)</span>. Instead of the absolute number of shortest paths, betweenness centrality
+quantifies their relative number. The relative count is given by
+<span class="math display">\[
+\delta(s,t\lvert u)= \frac{\sigma(s,t\lvert u)}{\sigma(s,t)},
+\]</span>
+where <span class="math inline">\(\sigma(s,t)\)</span> is the total number of shortest paths connecting <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>.
+The expression <span class="math inline">\(\delta(s,t\lvert u)\)</span> can be interpreted as the extent to
+which <span class="math inline">\(u\)</span> controls the communication between <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>. Betweenness is then defined
+as
+<span class="math display">\[
+c_b(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)
+\]</span>
+The interpretation of betweenness is not only restricted to communication.
+More generally, betweenness quantifies the influence of vertices on the trans-
+fer of items or information through the network with the assumption that it
+follows shortest paths. Many different variants of shortest path betweenness
+have been proposed to incorporate additional assumptions, e.g. the specific lo-
+cation of a vertex <span class="math inline">\(u\)</span> on a shortest <span class="math inline">\(s,t\)</span>-path or its length. Some of these variants
+are given in the following table.</p>
+<table>
+<colgroup>
+<col width="85%" />
+<col width="14%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>proximal source</td>
+<td><span class="math inline">\(c_{bs}(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)\cdot A_{su}\)</span></td>
+</tr>
+<tr class="even">
+<td>proximal target</td>
+<td><span class="math inline">\(c_{bt}(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)\cdot A_{ut}\)</span></td>
+</tr>
+<tr class="odd">
+<td>k-bounded distance</td>
+<td><span class="math inline">\(c_{bk}(u) = \sum\limits_{dist(s,t)\leq k} \delta(s,t\lvert u)\)</span></td>
+</tr>
+<tr class="even">
+<td>length-scaled</td>
+<td><span class="math inline">\(c_{bd}(u) = \sum\limits_{s,t \in V} \frac{\delta(s,t\lvert u)}{dist(s,t)}\)</span></td>
+</tr>
+<tr class="odd">
+<td>linearly-scaled</td>
+<td><span class="math inline">\(c_{bl}(u) = \sum\limits_{s,t \in V} \delta(s,t\lvert u)\frac{dist(s,u)}{dist(s,t)}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Details on these variants can be found in <span class="citation">Brandes (<a href="#ref-b-vsbctgc-08">2008</a>)</span>.
+Other variants of the betweenness concept rely on different assumptions of transfer in networks
+besides shortest paths.</p>
+<p>A measure based on network flow was defined by <span class="citation">Freeman, Borgatti, and White (<a href="#ref-fbw-cvgmbbnf-91">1991</a>)</span>.
+The authors assume information as a flow process and assign to each edge a non-negative
+value representing the maximum amount of information that can be passed
+between the endpoints. The aim is then to measure the extent to which the
+maximum flow between two vertices <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> depends on a vertex <span class="math inline">\(u\)</span>. Denote by
+<span class="math inline">\(f(s,t)\)</span> the maximum <span class="math inline">\((s,t)\)</span>-flow w.r.t. constraints imposed by edge capacities
+and the amount of flow which must go through <span class="math inline">\(u\)</span> by <span class="math inline">\(f( s, t \lvert u )\)</span> . Similar to
+shortest path betweenness, <em>flow betweenness</em> is then defined as
+<span class="math display">\[
+c_f(u)=\sum\limits_{s,t \in V} \frac{f(s,t\lvert u)}{f(s,t)}.
+\]</span>
+The index was introduced as a betweenness variant for weighted networks
+but it can easily applied to unweighted ones. In the case of simple undirected and
+unweighted networks, the maximum <span class="math inline">\((s, t)\)</span>-flow is equivalent to the
+number of edge disjoint <span class="math inline">\((s,t)\)</span>-paths and <span class="math inline">\(f(s,t|u)\)</span> is the number of
+paths <span class="math inline">\(u\)</span> lies on.</p>
+<p>A variant based on walks instead of paths was proposed by <span class="citation">Newman (<a href="#ref-n-mbcbrw-05">2005</a>)</span>. His <em>random walk betweenness</em>
+calculates the expected number of times a random <span class="math inline">\((s,t)\)</span>-walk passes
+through a vertex <span class="math inline">\(u\)</span>, averaged over all <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>. Newman shows, that his variant
+of betweenness can also be calculated with a current-flow analogy by viewing
+a graph as an electrical network. Random walk betweenness is then equiva-
+lent to the amount of current that flows through <span class="math inline">\(u\)</span>. The index is thus also known as
+<em>current flow betweenness</em>. Details and formal definitions of his versions can be found in
+the literature <span class="citation">(Newman <a href="#ref-n-mbcbrw-05">2005</a>; Brandes and Fleischer <a href="#ref-bf-cmbcf-05">2005</a>)</span>.</p>
+<p>Two variants based on the <em>randomzed shortest path</em> (RSP) framework <span class="citation">(Yen et al. <a href="#ref-ysms-fdmngbscd-08">2008</a>; Saerens et al. <a href="#ref-safy-rsptrm-09">2009</a>; Kivimäki, Shimbo, and Saerens <a href="#ref-kss-dtrspcgnd-14">2014</a>)</span> were proposed by <span class="citation">Kivimäki et al. (<a href="#ref-klss-tbcmbrsp-16">2016</a>)</span>. The variants are refered to as
+<em>simple RSP betweenness</em> and <em>RSP net betweenness</em>. The derivation of both indices is
+rather involved and goes beyond the scope of this tutorial. The interested reader should consult the original work for details. One aspect worth mentioning, though, is that both variants include a tuning parameter <span class="math inline">\(\beta\)</span>.
+Both variants converge to the traditional version of betweennes for <span class="math inline">\(\beta \to \infty\)</span>. For <span class="math inline">\(\beta \to 0\)</span>,
+simple RSP betweenness converges to the expected number of visits to a node over all absorbing walks with respect to the unbiased random walk probabilities. This means for undirected networks,
+that the index converges to degree. RSP net betweenness, on the other hand, converges to Newmann’s
+random walk betweenness.</p>
+<p>All variants of betweenness can be described in a more general form considering a
+flow of information analogy. Depending on the assumption of how
+information is ‘flowing’ between <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span>, the set <span class="math inline">\(P(s, t)\)</span> contains all
+possible information channels to transmit the piece of information.
+This set might contain all shortest <span class="math inline">\(( s, t )\)</span>-paths if the information has to be trans-
+mitted as fast as possible or all random <span class="math inline">\((s, t)\)</span>-walks when the delivery time
+does not matter. In principle, any kind of trajectory on a graph can be
+thought of as an information channel. The set <span class="math inline">\(P( s, t \lvert u )\)</span> contains all information
+channels where the vertex <span class="math inline">\(u\)</span> is in a position to control the information flow.
+For shortest path betweenness, <span class="math inline">\(u\)</span> is in a controlling position if it is part of
+an information channel and for proximal target betweenness if it presents the
+information to the target <span class="math inline">\(t\)</span>. In the former case <span class="math inline">\(P( s, t \lvert u )\)</span> comprises all elements
+of <span class="math inline">\(P(s, t)\)</span> that contain <span class="math inline">\(u\)</span> as an intermediary and in the latter all elements that
+contain the edge <span class="math inline">\((u,t)\)</span> . Again, the position of control could be defined as any
+location on a trajectory. A measure of relative betweenness is then defined with
+aggregation rules over the two specified sets, commonly the fraction of their
+cardinalities. This fraction can also be weighted according to specified rules,
+e.g. as in length scaled betweenness. Aggregating over all possible sources and
+targets, we can thus define a <em>generic betweenness</em> index as
+<span class="math display">\[
+c_{bg}(u) = \sum\limits_{s,t \in V}\frac{\lvert P(s,t\lvert u) \rvert}{\lvert P(s,t) \rvert} \cdot w(s,t).
+\]</span>
+Thus, many other variants are possible, for instance also <span class="math inline">\(k\)</span>-betweenness mentioned by <span class="citation">Borgatti and Everett (<a href="#ref-be-gpc-06">2006</a>)</span>,
+where <span class="math inline">\(P( s, t )\)</span> is the set of all <span class="math inline">\(( s, t )\)</span>-paths of length at most <span class="math inline">\(k\)</span>.</p>
+<p>There exist many more betweenness-like indices that where not covered here, but are listed below in no
+particular order:</p>
+<ul>
+<li><em>communicability betweenness</em> based on the matrix exponential <span class="citation">(Estrada, Higham, and Hatano <a href="#ref-ehh-cbcn-09">2009</a>)</span></li>
+<li><span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> betweenness, which are closely related to current flow betweenness <span class="citation">(Avrachenkov et al. <a href="#ref-alms-acfbc-13">2013</a>; Avrachenkov, Mazalov, and Tsynguev <a href="#ref-amt-bcfcwn-15">2015</a>)</span>,</li>
+<li><em>ranking betweenness</em>, which combines betweenness with the idea of PageRank <span class="citation">(Agryzkov et al. <a href="#ref-aotv-nbcmbarnn-14">2014</a>)</span></li>
+<li>range-limited forms of betweenness <span class="citation">(Ercsey-Ravasz et al. <a href="#ref-elct-rcmcn-12">2012</a>)</span></li>
+<li><em>bridgeness</em> <span class="citation">(Jensen et al. <a href="#ref-jmkvvjcmf-dgbn-16">2016</a>)</span></li>
+<li><em>super mediator</em> <span class="citation">(Saito et al. <a href="#ref-skom-sm-ncmniidsn-16">2016</a>)</span></li>
+<li><em>BridgeRank</em> <span class="citation">(Salavati, Abdollahpouri, and Manbari <a href="#ref-sam-bnfcmblsn-18">2018</a>)</span></li>
+</ul>
+</div>
+<div id="closeness-and-variants" class="section level2">
+<h2><span class="header-section-number">2.3</span> Closeness (and variants)</h2>
+</div>
+<div id="eigenvector-and-variants" class="section level2">
+<h2><span class="header-section-number">2.4</span> Eigenvector (and variants)</h2>
+</div>
+<div id="others" class="section level2">
+<h2><span class="header-section-number">2.5</span> Others</h2>
+
+<div id="refs" class="references">
+<div>
+<p>Agryzkov, Taras, Jose L. Oliver, Leandro Tortosa, and Jose Vicent. 2014. “A New Betweenness Centrality Measure Based on an Algorithm for Ranking the Nodes of a Network.” <em>Applied Mathematics and Computation</em> 244 (Supplement C): 467–78. <a href="https://doi.org/10.1016/j.amc.2014.07.026" class="uri">https://doi.org/10.1016/j.amc.2014.07.026</a>.</p>
+</div>
+<div>
+<p>Anthonisse, J.M. 1971. “The Rush in a Directed Graph.” <em>Stichting Mathematisch Centrum. Mathematische Besliskunde</em> BN 9/71 (January).</p>
+</div>
+<div>
+<p>Avrachenkov, Konstantin E., Vladimir V. Mazalov, and Bulat T. Tsynguev. 2015. “Beta Current Flow Centrality for Weighted Networks.” In <em>Computational Social Networks</em>, edited by My T. Thai, Nam P. Nguyen, and Huawei Shen, 216–27. Lecture Notes in Computer Science. Springer International Publishing.</p>
+</div>
+<div>
+<p>Avrachenkov, Konstantin, Nelly Litvak, Vasily Medyanikov, and Marina Sokol. 2013. “Alpha Current Flow Betweenness Centrality.” In <em>International Workshop on Algorithms and Models for the Web-Graph</em>, 106–17. Springer.</p>
+</div>
+<div>
+<p>Borgatti, Stephen P., and Martin G. Everett. 2006. “A Graph-Theoretic Perspective on Centrality.” <em>Social Networks</em> 28 (4): 466–84. <a href="https://doi.org/10.1016/j.socnet.2005.11.005" class="uri">https://doi.org/10.1016/j.socnet.2005.11.005</a>.</p>
+</div>
+<div>
+<p>Brandes, Ulrik. 2008. “On Variants of Shortest-Path Betweenness Centrality and Their Generic Computation.” <em>Social Networks</em> 30 (2): 136–45. <a href="https://doi.org/10.1016/j.socnet.2007.11.001" class="uri">https://doi.org/10.1016/j.socnet.2007.11.001</a>.</p>
+</div>
+<div>
+<p>Brandes, Ulrik, and Daniel Fleischer. 2005. “Centrality Measures Based on Current Flow.” In <em>STACS</em>, 3404:533–44. Springer.</p>
+</div>
+<div>
+<p>Ercsey-Ravasz, Mária, Ryan N. Lichtenwalter, Nitesh V. Chawla, and Zoltán Toroczkai. 2012. “Range-Limited Centrality Measures in Complex Networks.” <em>Physical Review E</em> 85 (6): 066103. <a href="https://doi.org/10.1103/PhysRevE.85.066103" class="uri">https://doi.org/10.1103/PhysRevE.85.066103</a>.</p>
+</div>
+<div>
+<p>Estrada, Ernesto, Desmond J. Higham, and Naomichi Hatano. 2009. “Communicability Betweenness in Complex Networks.” <em>Physica A: Statistical Mechanics and Its Applications</em> 388 (5): 764–74. <a href="https://doi.org/10.1016/j.physa.2008.11.011" class="uri">https://doi.org/10.1016/j.physa.2008.11.011</a>.</p>
+</div>
+<div>
+<p>Freeman, Linton C. 1977. “A Set of Measures of Centrality Based on Betweenness.” <em>Sociometry</em> 40 (1): 35–41. <a href="https://doi.org/10.2307/3033543" class="uri">https://doi.org/10.2307/3033543</a>.</p>
+</div>
+<div>
+<p>Freeman, Linton C., Stephen P. Borgatti, and Douglas R. White. 1991. “Centrality in Valued Graphs: A Measure of Betweenness Based on Network Flow.” <em>Social Networks</em> 13 (2): 141–54. <a href="https://doi.org/10.1016/0378-8733(91)90017-N" class="uri">https://doi.org/10.1016/0378-8733(91)90017-N</a>.</p>
+</div>
+<div>
+<p>Jensen, Pablo, Matteo Morini, Márton Karsai, Tommaso Venturini, Alessandro Vespignani, Mathieu Jacomy, Jean-Philippe Cointet, Pierre Mercklé, and Eric Fleury. 2016. “Detecting Global Bridges in Networks.” <em>Journal of Complex Networks</em> 4 (3): 319–29. <a href="https://doi.org/10.1093/comnet/cnv022" class="uri">https://doi.org/10.1093/comnet/cnv022</a>.</p>
+</div>
+<div>
+<p>Kivimäki, Ilkka, Bertrand Lebichot, Jari Saramäki, and Marco Saerens. 2016. “Two Betweenness Centrality Measures Based on Randomized Shortest Paths.” <em>Scientific Reports</em> 6 (February). <a href="https://doi.org/10.1038/srep19668" class="uri">https://doi.org/10.1038/srep19668</a>.</p>
+</div>
+<div>
+<p>Kivimäki, Ilkka, Masashi Shimbo, and Marco Saerens. 2014. “Developments in the Theory of Randomized Shortest Paths with a Comparison of Graph Node Distances.” <em>Physica A: Statistical Mechanics and Its Applications</em> 393 (Supplement C): 600–616. <a href="https://doi.org/10.1016/j.physa.2013.09.016" class="uri">https://doi.org/10.1016/j.physa.2013.09.016</a>.</p>
+</div>
+<div>
+<p>Newman, M. E. J. 2005. “A Measure of Betweenness Centrality Based on Random Walks.” <em>Social Networks</em> 27 (1): 39–54. <a href="https://doi.org/10.1016/j.socnet.2004.11.009" class="uri">https://doi.org/10.1016/j.socnet.2004.11.009</a>.</p>
+</div>
+<div>
+<p>Saerens, Marco, Youssef Achbany, François Fouss, and Luh Yen. 2009. “Randomized Shortest-Path Problems: Two Related Models.” <em>Neural Computation</em> 21 (8): 2363–2404. <a href="https://doi.org/10.1162/neco.2009.11-07-643" class="uri">https://doi.org/10.1162/neco.2009.11-07-643</a>.</p>
+</div>
+<div>
+<p>Saito, Kazumi, Masahiro Kimura, Kouzou Ohara, and Hiroshi Motoda. 2016. “Super Mediator New Centrality Measure of Node Importance for Information Diffusion over Social Network.” <em>Information Sciences</em>, Special issue on discovery science, 329 (Supplement C): 985–1000. <a href="https://doi.org/10.1016/j.ins.2015.03.034" class="uri">https://doi.org/10.1016/j.ins.2015.03.034</a>.</p>
+</div>
+<div>
+<p>Salavati, Chiman, Alireza Abdollahpouri, and Zhaleh Manbari. 2018. “BridgeRank: A Novel Fast Centrality Measure Based on Local Structure of the Network.” <em>Physica A: Statistical Mechanics and Its Applications</em> 496 (April): 635–53. <a href="https://doi.org/10.1016/j.physa.2017.12.087" class="uri">https://doi.org/10.1016/j.physa.2017.12.087</a>.</p>
+</div>
+<div>
+<p>Shimbel, Alfonso. 1953. “Structural Parameters of Communication Networks.” <em>The Bulletin of Mathematical Biophysics</em> 15 (4): 501–7. <a href="https://doi.org/10.1007/BF02476438" class="uri">https://doi.org/10.1007/BF02476438</a>.</p>
+</div>
+<div>
+<p>Yen, Luh, Marco Saerens, Amin Mantrach, and Masashi Shimbo. 2008. “A Family of Dissimilarity Measures Between Nodes Generalizing Both the Shortest-Path and the Commute-Time Distances.” In <em>Proceedings of the 14th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–93. KDD ’08. New York, NY, USA: ACM. <a href="https://doi.org/10.1145/1401890.1401984" class="uri">https://doi.org/10.1145/1401890.1401984</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-a-rdg-71">
+<p>Anthonisse, J.M. 1971. “The Rush in a Directed Graph.” <em>Stichting Mathematisch Centrum. Mathematische Besliskunde</em> BN 9/71 (January).</p>
+</div>
+<div id="ref-f-smcbb-77">
+<p>Freeman, Linton C. 1977. “A Set of Measures of Centrality Based on Betweenness.” <em>Sociometry</em> 40 (1): 35–41. <a href="https://doi.org/10.2307/3033543" class="uri">https://doi.org/10.2307/3033543</a>.</p>
+</div>
+<div id="ref-s-spcn-53">
+<p>Shimbel, Alfonso. 1953. “Structural Parameters of Communication Networks.” <em>The Bulletin of Mathematical Biophysics</em> 15 (4): 501–7. <a href="https://doi.org/10.1007/BF02476438" class="uri">https://doi.org/10.1007/BF02476438</a>.</p>
+</div>
+<div id="ref-b-vsbctgc-08">
+<p>Brandes, Ulrik. 2008. “On Variants of Shortest-Path Betweenness Centrality and Their Generic Computation.” <em>Social Networks</em> 30 (2): 136–45. <a href="https://doi.org/10.1016/j.socnet.2007.11.001" class="uri">https://doi.org/10.1016/j.socnet.2007.11.001</a>.</p>
+</div>
+<div id="ref-fbw-cvgmbbnf-91">
+<p>Freeman, Linton C., Stephen P. Borgatti, and Douglas R. White. 1991. “Centrality in Valued Graphs: A Measure of Betweenness Based on Network Flow.” <em>Social Networks</em> 13 (2): 141–54. <a href="https://doi.org/10.1016/0378-8733(91)90017-N" class="uri">https://doi.org/10.1016/0378-8733(91)90017-N</a>.</p>
+</div>
+<div id="ref-n-mbcbrw-05">
+<p>Newman, M. E. J. 2005. “A Measure of Betweenness Centrality Based on Random Walks.” <em>Social Networks</em> 27 (1): 39–54. <a href="https://doi.org/10.1016/j.socnet.2004.11.009" class="uri">https://doi.org/10.1016/j.socnet.2004.11.009</a>.</p>
+</div>
+<div id="ref-bf-cmbcf-05">
+<p>Brandes, Ulrik, and Daniel Fleischer. 2005. “Centrality Measures Based on Current Flow.” In <em>STACS</em>, 3404:533–44. Springer.</p>
+</div>
+<div id="ref-ysms-fdmngbscd-08">
+<p>Yen, Luh, Marco Saerens, Amin Mantrach, and Masashi Shimbo. 2008. “A Family of Dissimilarity Measures Between Nodes Generalizing Both the Shortest-Path and the Commute-Time Distances.” In <em>Proceedings of the 14th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–93. KDD ’08. New York, NY, USA: ACM. <a href="https://doi.org/10.1145/1401890.1401984" class="uri">https://doi.org/10.1145/1401890.1401984</a>.</p>
+</div>
+<div id="ref-safy-rsptrm-09">
+<p>Saerens, Marco, Youssef Achbany, François Fouss, and Luh Yen. 2009. “Randomized Shortest-Path Problems: Two Related Models.” <em>Neural Computation</em> 21 (8): 2363–2404. <a href="https://doi.org/10.1162/neco.2009.11-07-643" class="uri">https://doi.org/10.1162/neco.2009.11-07-643</a>.</p>
+</div>
+<div id="ref-kss-dtrspcgnd-14">
+<p>Kivimäki, Ilkka, Masashi Shimbo, and Marco Saerens. 2014. “Developments in the Theory of Randomized Shortest Paths with a Comparison of Graph Node Distances.” <em>Physica A: Statistical Mechanics and Its Applications</em> 393 (Supplement C): 600–616. <a href="https://doi.org/10.1016/j.physa.2013.09.016" class="uri">https://doi.org/10.1016/j.physa.2013.09.016</a>.</p>
+</div>
+<div id="ref-klss-tbcmbrsp-16">
+<p>Kivimäki, Ilkka, Bertrand Lebichot, Jari Saramäki, and Marco Saerens. 2016. “Two Betweenness Centrality Measures Based on Randomized Shortest Paths.” <em>Scientific Reports</em> 6 (February). <a href="https://doi.org/10.1038/srep19668" class="uri">https://doi.org/10.1038/srep19668</a>.</p>
+</div>
+<div id="ref-be-gpc-06">
+<p>Borgatti, Stephen P., and Martin G. Everett. 2006. “A Graph-Theoretic Perspective on Centrality.” <em>Social Networks</em> 28 (4): 466–84. <a href="https://doi.org/10.1016/j.socnet.2005.11.005" class="uri">https://doi.org/10.1016/j.socnet.2005.11.005</a>.</p>
+</div>
+<div id="ref-ehh-cbcn-09">
+<p>Estrada, Ernesto, Desmond J. Higham, and Naomichi Hatano. 2009. “Communicability Betweenness in Complex Networks.” <em>Physica A: Statistical Mechanics and Its Applications</em> 388 (5): 764–74. <a href="https://doi.org/10.1016/j.physa.2008.11.011" class="uri">https://doi.org/10.1016/j.physa.2008.11.011</a>.</p>
+</div>
+<div id="ref-alms-acfbc-13">
+<p>Avrachenkov, Konstantin, Nelly Litvak, Vasily Medyanikov, and Marina Sokol. 2013. “Alpha Current Flow Betweenness Centrality.” In <em>International Workshop on Algorithms and Models for the Web-Graph</em>, 106–17. Springer.</p>
+</div>
+<div id="ref-amt-bcfcwn-15">
+<p>Avrachenkov, Konstantin E., Vladimir V. Mazalov, and Bulat T. Tsynguev. 2015. “Beta Current Flow Centrality for Weighted Networks.” In <em>Computational Social Networks</em>, edited by My T. Thai, Nam P. Nguyen, and Huawei Shen, 216–27. Lecture Notes in Computer Science. Springer International Publishing.</p>
+</div>
+<div id="ref-aotv-nbcmbarnn-14">
+<p>Agryzkov, Taras, Jose L. Oliver, Leandro Tortosa, and Jose Vicent. 2014. “A New Betweenness Centrality Measure Based on an Algorithm for Ranking the Nodes of a Network.” <em>Applied Mathematics and Computation</em> 244 (Supplement C): 467–78. <a href="https://doi.org/10.1016/j.amc.2014.07.026" class="uri">https://doi.org/10.1016/j.amc.2014.07.026</a>.</p>
+</div>
+<div id="ref-elct-rcmcn-12">
+<p>Ercsey-Ravasz, Mária, Ryan N. Lichtenwalter, Nitesh V. Chawla, and Zoltán Toroczkai. 2012. “Range-Limited Centrality Measures in Complex Networks.” <em>Physical Review E</em> 85 (6): 066103. <a href="https://doi.org/10.1103/PhysRevE.85.066103" class="uri">https://doi.org/10.1103/PhysRevE.85.066103</a>.</p>
+</div>
+<div id="ref-jmkvvjcmf-dgbn-16">
+<p>Jensen, Pablo, Matteo Morini, Márton Karsai, Tommaso Venturini, Alessandro Vespignani, Mathieu Jacomy, Jean-Philippe Cointet, Pierre Mercklé, and Eric Fleury. 2016. “Detecting Global Bridges in Networks.” <em>Journal of Complex Networks</em> 4 (3): 319–29. <a href="https://doi.org/10.1093/comnet/cnv022" class="uri">https://doi.org/10.1093/comnet/cnv022</a>.</p>
+</div>
+<div id="ref-skom-sm-ncmniidsn-16">
+<p>Saito, Kazumi, Masahiro Kimura, Kouzou Ohara, and Hiroshi Motoda. 2016. “Super Mediator New Centrality Measure of Node Importance for Information Diffusion over Social Network.” <em>Information Sciences</em>, Special issue on discovery science, 329 (Supplement C): 985–1000. <a href="https://doi.org/10.1016/j.ins.2015.03.034" class="uri">https://doi.org/10.1016/j.ins.2015.03.034</a>.</p>
+</div>
+<div id="ref-sam-bnfcmblsn-18">
+<p>Salavati, Chiman, Alireza Abdollahpouri, and Zhaleh Manbari. 2018. “BridgeRank: A Novel Fast Centrality Measure Based on Local Structure of the Network.” <em>Physica A: Statistical Mechanics and Its Applications</em> 496 (April): 635–53. <a href="https://doi.org/10.1016/j.physa.2017.12.087" class="uri">https://doi.org/10.1016/j.physa.2017.12.087</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["centrality_tutorial.pdf", "centrality_tutorial.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
