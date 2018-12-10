@@ -140,7 +140,7 @@ defined as \[
 c_d(u) = \{v : \{u,v\} \in E\} = \lvert N(u) \rvert
 \] Degree centrality is a purely \emph{local} measure since it only
 depends on the direct neighborhood of a node. A simple application
-example is popularity in friend- ship networks, i.e. ``who has the most
+example is popularity in friendship networks, i.e. ``who has the most
 friends?''. The definition of degree centrality can easily be adapted
 for directed and weighted networks. For directed networks, \[
 c_d^+(u)=\{v : (u,v) \in E\} = \lvert N^+(u) \rvert \quad \text{and} \quad 
@@ -331,6 +331,15 @@ c_{hc}(u)=\sum\limits_{t \in V}\frac{1}{dist(u,t)}.
 As in the case of betweenness, many different variations of closeness
 have been proposed, mostly to correct for the fact that the
 ``classical'' closeness is not properly defined on unconnected networks.
+\citet{mm-dpusn-74} introduced an index which penalizes the number of
+not reachable nodes. Their \emph{adjusted index of centrality} is
+defined as
+
+\[
+c_{aic}(u) = \frac{\sum_{s \in V}\sum_{t \in V} dist(s,t)+\rho n_s}{\sum_{t \in V} dist(u,t)+\rho n_u},
+\] where \(n_u\) are the number of non-reachable nodes by \(u\) and
+\(\rho\) is a penalizing factor.
+
 vf-irmeicrn-98 introduce \emph{integration} as an index which evaluates
 how well a vertex is integrated in a network. It is defined as \[
 c_{int}(u)=\frac{\sum_{t \in V} (diam(G)+1-dist(u,t))}{n-1},
@@ -378,14 +387,103 @@ With the matrix \(C\), information centrality equates to
 c_{inf}(u)=\left(C_{uu}+ \frac{T-2R}{n}\right)^{-1},
 \] where \[
 T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} C_{uv}.
-\] \#\# Eigenvector (and variants)
+\] Note that \(T\) and \(R\) are the same for all vertices, such that
+the induced ranking only depends on \(C_uu\).
+
+\hypertarget{eigenvector-and-variants}{%
+\section{Eigenvector (and variants)}\label{eigenvector-and-variants}}
+
+Eigenvector centrality was introduced by \citet{b-fwassci-72}, yet
+earlier versions can already be found in \citet{w-afrt-52} and
+\citet{b-tgsa-58}. The index is part of the class of \emph{feedback
+centralities}. Measures in this class assume that the centrality of a
+node is conditional on the centrality of its neighbors. Nodes are highly
+central if they are connected to other highly central nodes. If we
+define the centrality of a vertex as the sum of the centrality scores of
+its adjacent vertices, we obtain \[
+c_e(u)=\sum_{t \in V} A_{ut}c_e(u).
+\] The resulting system of equation by considering the eigenvalue
+problem \(\lambda_1 x=Ax\). eigenvector centrality is then given by the
+eigenvector \(x_1\) associated with the principal eigenvalue
+\(\lambda_1\). Note that the principal eigenvector can also be computed
+with the power iteration by repeatedly multiplying \(A\) to an arbitrary
+vector \(b_0\) until convergence, i.e. \[
+\lim\limits_{k \to \infty}\frac{A^kb_0}{\| A^kb_0 \|}=x_1
+\] Since an entry \(A^k_{uv}\) is the number of \((u,v)\)-walks of
+length \(k\), eigenvector centrality of a node \(u\) can also be seen as
+the limit proportion of walks starting at \(u\).
+
+Google's \emph{PageRank} is undoubtedly one of the most famous
+adaptations of eigenvector centrality for directed graphs
+\citep{pbmw-pcrbow-99}. It is defined as \[
+c_{pr}(u)=\sum\limits_{v \in N^-(u)} \alpha \frac{c_{pr}(v)}{c_d^+(v)}+ (1-\alpha)
+\] where \(\alpha\) is damping factor, commonly set to \(0.85\). Note
+that an equivalent index was already introduced earlier by
+\citet{fj-sio-90} (see \citet{fj-tso-14} for a discussion).
+
+A feedback centrality dating back to 1953 was introduced by
+\citet{k-nsidsa-53}. Similarly to eigenvector centrality, all walks
+emanating from a node \(u\) are summed up but longer walks are penalized
+by an attenuation factor \(\alpha\). For- mally, \emph{Katz status} is
+defined as \[
+c_{katz}(u)=\sum\limits_{k=0}^\infty \sum_{t \in V} \alpha^k A^k_{ut}.
+\] In order for the series to converge, \(\alpha\) has to be chosen such
+that it is smaller than the reciprocal of the largest eigenvalue of
+\(A\). In this case, Katz status can be calculated with the closed form
+\[
+c_{katz}(u)=\left( (I-\alpha A)^{-1}\cdot \boldsymbol{1}_n\right)_u,
+\] where \(\boldsymbol{1}_n\) is the all one vector of length \(n\). A
+close variant is Bonacich's \(\beta\)-centrality, whose definition also
+allows for a negative attenuation factor \(\beta\) \citep{b-fwassci-72}.
+It is given by \[
+c_{\alpha,\beta}(u) = \alpha\sum\limits_{k=1}^\infty \sum_{t \in V} \beta^k A^{k-1}_{ut},
+\] where \(\alpha\) is merely a scaling factor, such that it can be
+omitted without altering the induced ranking. With
+\(|\beta| \leq \frac{1}{\lambda_1}\), a closed form is given by \[
+c_{\alpha,\beta}(u) = \left((I-\beta A)^{-1}A \cdot \boldsymbol{1}_n\right)_u.
+\] Katz status and eigenvector centrality can be considered as positive
+feedback centralities, since the centrality of a vertex is higher if it
+is connected to other vertices with a high centrality score. In
+contrast, Bonacich's β-centrality with a negative β is a negative
+feedback centrality, since vertices are considered central, if they are
+connected to vertices with low centrality score. This kind of centrality
+is particularly of interest in bargaining situations since bargaining
+power comes from being in a better position than negotiating partners.
+
+\hypertarget{matrix-exponential}{%
+\section{Matrix exponential}\label{matrix-exponential}}
+
+There exist a variety of indices which are based on the matrix
+exponential \(\exp(A)\) of the adjacency matrix. The first of this kind,
+\emph{subgraph centrality}, was introduced by \citet{er-sccn-05}. It is
+closely related to eigenvector centrality and Katz status, since it also
+involves counting walks. The difference is that only closed walks are
+considered and longer walks are inversely weighted by the factorial of
+their length, i.e. \[
+c_s(u)=\sum_{k=0}^\infty\frac{A^k_{uu}}{k!}.
+\] The weighting by factorials is a convenient choice since it
+guarantees conver- gence of the series. Its closed form is given by the
+matrix exponential, such that \[
+c_s(u)=\exp(A)_{uu}.
+\] The authors also consider variants, where only walks of even or odd
+length are considered, giving rise to \emph{even} and \emph{odd subgraph
+centrality} defined as \[
+c_{se}(u)=\sum_{k=0}^\infty\frac{A^{2k}_{uu}}{(2k)!} \quad \text{and} \quad c_{so}(u)=\sum_{k=0}^\infty\frac{A^{2k+1}_{uu}}{(2k+1)!}.
+\] All three indices can also be expressed with the spectral
+decomposition of \(A\): \[
+  c_s(u)=\sum_{k=0}^n \exp(\lambda_j) x_j^2(u)
+\] \[
+  c_{se}(u)=\sum_{k=0}^n \cosh(\lambda_j) x_j^2(u)
+\] \[
+  c_{so}(u)=\sum_{k=0}^n \sinh(\lambda_j) x_j^2(u),
+\] where \(x_j(u)\) is the \(u\)th entry of the eigenvector \(x_j\)
+associated with the eigen- value \(\lambda_j\).
 
 \hypertarget{others}{%
 \section{Others}\label{others}}
 
 \hypertarget{references}{%
-\section*{References}\label{references}}
-\addcontentsline{toc}{section}{References}
+\section{References}\label{references}}
 
 \bibliography{Indices.bib,Theory.bib}
 

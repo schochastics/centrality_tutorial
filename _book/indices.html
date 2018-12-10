@@ -72,8 +72,10 @@
 <li class="chapter" data-level="2.1" data-path="indices.html"><a href="indices.html#degree"><i class="fa fa-check"></i><b>2.1</b> Degree</a></li>
 <li class="chapter" data-level="2.2" data-path="indices.html"><a href="indices.html#betweenness-and-variants"><i class="fa fa-check"></i><b>2.2</b> Betweenness (and variants)</a></li>
 <li class="chapter" data-level="2.3" data-path="indices.html"><a href="indices.html#closeness-and-variants"><i class="fa fa-check"></i><b>2.3</b> Closeness (and variants)</a></li>
-<li class="chapter" data-level="2.4" data-path="indices.html"><a href="indices.html#others"><i class="fa fa-check"></i><b>2.4</b> Others</a></li>
-<li class="chapter" data-level="" data-path="indices.html"><a href="indices.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="2.4" data-path="indices.html"><a href="indices.html#eigenvector-and-variants"><i class="fa fa-check"></i><b>2.4</b> Eigenvector (and variants)</a></li>
+<li class="chapter" data-level="2.5" data-path="indices.html"><a href="indices.html#matrix-exponential"><i class="fa fa-check"></i><b>2.5</b> Matrix exponential</a></li>
+<li class="chapter" data-level="2.6" data-path="indices.html"><a href="indices.html#others"><i class="fa fa-check"></i><b>2.6</b> Others</a></li>
+<li class="chapter" data-level="2.7" data-path="indices.html"><a href="indices.html#references"><i class="fa fa-check"></i><b>2.7</b> References</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -114,8 +116,8 @@ represent a plausible concept of structural importance.</p>
 c_d(u) = \{v : \{u,v\} \in E\} = \lvert N(u) \rvert
 \]</span>
 Degree centrality is a purely <em>local</em> measure since it only depends on the direct
-neighborhood of a node. A simple application example is popularity in friend-
-ship networks, i.e. “who has the most friends?”. The definition of degree centrality can easily be
+neighborhood of a node. A simple application example is popularity in friendship networks,
+i.e. “who has the most friends?”. The definition of degree centrality can easily be
 adapted for directed and weighted networks. For directed networks,
 <span class="math display">\[
 c_d^+(u)=\{v : (u,v) \in E\} = \lvert N^+(u) \rvert \quad \text{and} \quad 
@@ -274,8 +276,14 @@ This variant was proposed by various researcher. Among the first are <span class
 <span class="citation">Rochat (<a href="#ref-r-cceughci-09">2009</a>)</span> later introduced it as <em>harmonic closeness</em>.</p>
 <p>As in the case of betweenness, many different variations of closeness have
 been proposed, mostly to correct for the fact that the “classical” closeness is not
-properly defined on unconnected networks. vf-irmeicrn-98 introduce <em>integration</em> as
-an index which evaluates how well a vertex is integrated in a network. It is defined as
+properly defined on unconnected networks. <span class="citation">Moxley and Moxley (<a href="#ref-mm-dpusn-74">1974</a>)</span> introduced an index
+which penalizes the number of not reachable nodes. Their <em>adjusted index of centrality</em> is defined as</p>
+<p><span class="math display">\[
+c_{aic}(u) = \frac{\sum_{s \in V}\sum_{t \in V} dist(s,t)+\rho n_s}{\sum_{t \in V} dist(u,t)+\rho n_u},
+\]</span>
+where <span class="math inline">\(n_u\)</span> are the number of non-reachable nodes by <span class="math inline">\(u\)</span> and <span class="math inline">\(\rho\)</span> is a penalizing factor.</p>
+<p>vf-irmeicrn-98 introduce <em>integration</em> as an index which evaluates how well a vertex
+is integrated in a network. It is defined as
 <span class="math display">\[
 c_{int}(u)=\frac{\sum_{t \in V} (diam(G)+1-dist(u,t))}{n-1},
 \]</span>
@@ -323,13 +331,108 @@ where
 <span class="math display">\[
 T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} C_{uv}.
 \]</span>
-## Eigenvector (and variants)</p>
+Note that <span class="math inline">\(T\)</span> and <span class="math inline">\(R\)</span> are the same for all vertices, such that the induced ranking only depends
+on <span class="math inline">\(C_uu\)</span>.</p>
+</div>
+<div id="eigenvector-and-variants" class="section level2">
+<h2><span class="header-section-number">2.4</span> Eigenvector (and variants)</h2>
+<p>Eigenvector centrality was introduced by <span class="citation">Bonacich (<a href="#ref-b-fwassci-72">1972</a>)</span>, yet earlier versions can already be
+found in <span class="citation">Wei (<a href="#ref-w-afrt-52">1952</a>)</span> and <span class="citation">Berge (<a href="#ref-b-tgsa-58">1958</a>)</span>. The index is part of the class of <em>feedback centralities</em>.
+Measures in this class assume that the centrality of a node is conditional on the
+centrality of its neighbors. Nodes are highly central if they are connected to
+other highly central nodes. If we define the centrality of a vertex as the sum of
+the centrality scores of its adjacent vertices, we obtain
+<span class="math display">\[
+c_e(u)=\sum_{t \in V} A_{ut}c_e(u).
+\]</span>
+The resulting system of equation by considering the eigenvalue problem <span class="math inline">\(\lambda_1 x=Ax\)</span>.
+eigenvector centrality is then given by the eigenvector <span class="math inline">\(x_1\)</span> associated with the principal
+eigenvalue <span class="math inline">\(\lambda_1\)</span>. Note that the principal eigenvector can also be computed with the power iteration by
+repeatedly multiplying <span class="math inline">\(A\)</span> to an arbitrary vector <span class="math inline">\(b_0\)</span> until convergence, i.e.
+<span class="math display">\[
+\lim\limits_{k \to \infty}\frac{A^kb_0}{\| A^kb_0 \|}=x_1
+\]</span>
+Since an entry <span class="math inline">\(A^k_{uv}\)</span> is the number of <span class="math inline">\((u,v)\)</span>-walks of length <span class="math inline">\(k\)</span>, eigenvector
+centrality of a node <span class="math inline">\(u\)</span> can also be seen as the limit proportion of walks starting at <span class="math inline">\(u\)</span>.</p>
+<p>Google’s <em>PageRank</em> is undoubtedly one of the most famous adaptations of
+eigenvector centrality for directed graphs <span class="citation">(Page et al. <a href="#ref-pbmw-pcrbow-99">1999</a>)</span>. It is defined as
+<span class="math display">\[
+c_{pr}(u)=\sum\limits_{v \in N^-(u)} \alpha \frac{c_{pr}(v)}{c_d^+(v)}+ (1-\alpha)
+\]</span>
+where <span class="math inline">\(\alpha\)</span> is damping factor, commonly set to <span class="math inline">\(0.85\)</span>. Note that an equivalent
+index was already introduced earlier by <span class="citation">Friedkin and Johnsen (<a href="#ref-fj-sio-90">1990</a>)</span> (see <span class="citation">Friedkin and Johnsen (<a href="#ref-fj-tso-14">2014</a>)</span> for a discussion).</p>
+<p>A feedback centrality dating back to 1953 was introduced by <span class="citation">Katz (<a href="#ref-k-nsidsa-53">1953</a>)</span>.
+Similarly to eigenvector centrality, all walks emanating from a node <span class="math inline">\(u\)</span> are
+summed up but longer walks are penalized by an attenuation factor <span class="math inline">\(\alpha\)</span>. For-
+mally, <em>Katz status</em> is defined as
+<span class="math display">\[
+c_{katz}(u)=\sum\limits_{k=0}^\infty \sum_{t \in V} \alpha^k A^k_{ut}.
+\]</span>
+In order for the series to converge, <span class="math inline">\(\alpha\)</span> has to be chosen such that it is smaller
+than the reciprocal of the largest eigenvalue of <span class="math inline">\(A\)</span>. In this case, Katz status can
+be calculated with the closed form
+<span class="math display">\[
+c_{katz}(u)=\left( (I-\alpha A)^{-1}\cdot \boldsymbol{1}_n\right)_u,
+\]</span>
+where <span class="math inline">\(\boldsymbol{1}_n\)</span> is the all one vector of length <span class="math inline">\(n\)</span>.
+A close variant is Bonacich’s <span class="math inline">\(\beta\)</span>-centrality, whose definition also allows for a
+negative attenuation factor <span class="math inline">\(\beta\)</span> <span class="citation">(Bonacich <a href="#ref-b-fwassci-72">1972</a>)</span>. It is given by
+<span class="math display">\[
+c_{\alpha,\beta}(u) = \alpha\sum\limits_{k=1}^\infty \sum_{t \in V} \beta^k A^{k-1}_{ut},
+\]</span>
+where <span class="math inline">\(\alpha\)</span> is merely a scaling factor, such that it can be omitted without altering
+the induced ranking. With <span class="math inline">\(|\beta| \leq \frac{1}{\lambda_1}\)</span>, a closed form is given by
+<span class="math display">\[
+c_{\alpha,\beta}(u) = \left((I-\beta A)^{-1}A \cdot \boldsymbol{1}_n\right)_u.
+\]</span>
+Katz status and eigenvector centrality can be considered as positive feedback
+centralities, since the centrality of a vertex is higher if it is connected to other
+vertices with a high centrality score. In contrast, Bonacich’s β-centrality with
+a negative β is a negative feedback centrality, since vertices are considered
+central, if they are connected to vertices with low centrality score. This kind of
+centrality is particularly of interest in bargaining situations since bargaining
+power comes from being in a better position than negotiating partners.</p>
+</div>
+<div id="matrix-exponential" class="section level2">
+<h2><span class="header-section-number">2.5</span> Matrix exponential</h2>
+<p>There exist a variety of indices which are based on the matrix exponential <span class="math inline">\(\exp(A)\)</span>
+of the adjacency matrix. The first of this kind, <em>subgraph centrality</em>, was introduced by <span class="citation">Estrada and Rodríguez-Velázquez (<a href="#ref-er-sccn-05">2005</a>)</span>.
+It is closely related to eigenvector centrality and Katz status, since it also involves
+counting walks. The difference is that only closed walks are considered and longer
+walks are inversely weighted by the factorial of their length, i.e.
+<span class="math display">\[
+c_s(u)=\sum_{k=0}^\infty\frac{A^k_{uu}}{k!}.
+\]</span>
+The weighting by factorials is a convenient choice since it guarantees conver-
+gence of the series. Its closed form is given by the matrix exponential, such
+that
+<span class="math display">\[
+c_s(u)=\exp(A)_{uu}.
+\]</span>
+The authors also consider variants, where only walks of even or odd length are considered, giving rise
+to <em>even</em> and <em>odd subgraph centrality</em> defined as
+<span class="math display">\[
+c_{se}(u)=\sum_{k=0}^\infty\frac{A^{2k}_{uu}}{(2k)!} \quad \text{and} \quad c_{so}(u)=\sum_{k=0}^\infty\frac{A^{2k+1}_{uu}}{(2k+1)!}.
+\]</span>
+All three indices can also be expressed with the spectral decomposition of
+<span class="math inline">\(A\)</span>:
+<span class="math display">\[
+  c_s(u)=\sum_{k=0}^n \exp(\lambda_j) x_j^2(u)
+\]</span>
+<span class="math display">\[
+  c_{se}(u)=\sum_{k=0}^n \cosh(\lambda_j) x_j^2(u)
+\]</span>
+<span class="math display">\[
+  c_{so}(u)=\sum_{k=0}^n \sinh(\lambda_j) x_j^2(u),
+\]</span>
+where <span class="math inline">\(x_j(u)\)</span> is the <span class="math inline">\(u\)</span>th entry of the eigenvector <span class="math inline">\(x_j\)</span> associated with the eigen-
+value <span class="math inline">\(\lambda_j\)</span>.</p>
 </div>
 <div id="others" class="section level2">
-<h2><span class="header-section-number">2.4</span> Others</h2>
+<h2><span class="header-section-number">2.6</span> Others</h2>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2>References</h2>
+<div id="references" class="section level2">
+<h2><span class="header-section-number">2.7</span> References</h2>
 
 <div id="refs" class="references">
 <div>
@@ -351,6 +454,12 @@ T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} 
 <p>Bavelas, Alex. 1950. “Communication Patterns in Task-Oriented Groups.” <em>The Journal of the Acoustical Society of America</em> 22 (6): 725–30. <a href="https://doi.org/10.1121/1.1906679" class="uri">https://doi.org/10.1121/1.1906679</a>.</p>
 </div>
 <div>
+<p>Berge, Claude. 1958. <em>Théorie Des Graphes et Ses Applications</em>. Dunod, Paris.</p>
+</div>
+<div>
+<p>Bonacich, Phillip. 1972. “Factoring and Weighting Approaches to Status Scores and Clique Identification.” <em>The Journal of Mathematical Sociology</em> 2 (1): 113–20. <a href="https://doi.org/10.1080/0022250X.1972.9989806" class="uri">https://doi.org/10.1080/0022250X.1972.9989806</a>.</p>
+</div>
+<div>
 <p>Borgatti, Stephen P., and Martin G. Everett. 2006. “A Graph-Theoretic Perspective on Centrality.” <em>Social Networks</em> 28 (4): 466–84. <a href="https://doi.org/10.1016/j.socnet.2005.11.005" class="uri">https://doi.org/10.1016/j.socnet.2005.11.005</a>.</p>
 </div>
 <div>
@@ -369,10 +478,19 @@ T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} 
 <p>Estrada, Ernesto, Desmond J. Higham, and Naomichi Hatano. 2009. “Communicability Betweenness in Complex Networks.” <em>Physica A: Statistical Mechanics and Its Applications</em> 388 (5): 764–74. <a href="https://doi.org/10.1016/j.physa.2008.11.011" class="uri">https://doi.org/10.1016/j.physa.2008.11.011</a>.</p>
 </div>
 <div>
+<p>Estrada, Ernesto, and Juan A. Rodríguez-Velázquez. 2005. “Subgraph Centrality in Complex Networks.” <em>Physical Review E</em> 71 (5): 056103. <a href="https://doi.org/10.1103/PhysRevE.71.056103" class="uri">https://doi.org/10.1103/PhysRevE.71.056103</a>.</p>
+</div>
+<div>
 <p>Freeman, Linton C. 1977. “A Set of Measures of Centrality Based on Betweenness.” <em>Sociometry</em> 40 (1): 35–41. <a href="https://doi.org/10.2307/3033543" class="uri">https://doi.org/10.2307/3033543</a>.</p>
 </div>
 <div>
 <p>Freeman, Linton C., Stephen P. Borgatti, and Douglas R. White. 1991. “Centrality in Valued Graphs: A Measure of Betweenness Based on Network Flow.” <em>Social Networks</em> 13 (2): 141–54. <a href="https://doi.org/10.1016/0378-8733(91)90017-N" class="uri">https://doi.org/10.1016/0378-8733(91)90017-N</a>.</p>
+</div>
+<div>
+<p>Friedkin, Noah E., and Eugene C. Johnsen. 1990. “Social Influence and Opinions.” <em>The Journal of Mathematical Sociology</em> 15 (3-4): 193–206. <a href="https://doi.org/10.1080/0022250X.1990.9990069" class="uri">https://doi.org/10.1080/0022250X.1990.9990069</a>.</p>
+</div>
+<div>
+<p>———. 2014. “Two Steps to Obfuscation.” <em>Social Networks</em> 39 (October): 12–13. <a href="https://doi.org/10.1016/j.socnet.2014.03.008" class="uri">https://doi.org/10.1016/j.socnet.2014.03.008</a>.</p>
 </div>
 <div>
 <p>Gil-Mendieta, Jorge, and Samuel Schmidt. 1996. “The Political Network in Mexico.” <em>Social Networks</em> 18 (4): 355–81. <a href="https://doi.org/10.1016/0378-8733(95)00281-2" class="uri">https://doi.org/10.1016/0378-8733(95)00281-2</a>.</p>
@@ -387,16 +505,25 @@ T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} 
 <p>Jensen, Pablo, Matteo Morini, Márton Karsai, Tommaso Venturini, Alessandro Vespignani, Mathieu Jacomy, Jean-Philippe Cointet, Pierre Mercklé, and Eric Fleury. 2016. “Detecting Global Bridges in Networks.” <em>Journal of Complex Networks</em> 4 (3): 319–29. <a href="https://doi.org/10.1093/comnet/cnv022" class="uri">https://doi.org/10.1093/comnet/cnv022</a>.</p>
 </div>
 <div>
+<p>Katz, Leo. 1953. “A New Status Index Derived from Sociometric Analysis.” <em>Psychometrika</em> 18 (1): 39–43. <a href="https://doi.org/10.1007/BF02289026" class="uri">https://doi.org/10.1007/BF02289026</a>.</p>
+</div>
+<div>
 <p>Kivimäki, Ilkka, Bertrand Lebichot, Jari Saramäki, and Marco Saerens. 2016. “Two Betweenness Centrality Measures Based on Randomized Shortest Paths.” <em>Scientific Reports</em> 6 (February). <a href="https://doi.org/10.1038/srep19668" class="uri">https://doi.org/10.1038/srep19668</a>.</p>
 </div>
 <div>
 <p>Kivimäki, Ilkka, Masashi Shimbo, and Marco Saerens. 2014. “Developments in the Theory of Randomized Shortest Paths with a Comparison of Graph Node Distances.” <em>Physica A: Statistical Mechanics and Its Applications</em> 393 (Supplement C): 600–616. <a href="https://doi.org/10.1016/j.physa.2013.09.016" class="uri">https://doi.org/10.1016/j.physa.2013.09.016</a>.</p>
 </div>
 <div>
+<p>Moxley, Robert L., and Nancy F. Moxley. 1974. “Determining Point-Centrality in Uncontrived Social Networks.” <em>Sociometry</em> 37 (1): 122–30. <a href="https://doi.org/10.2307/2786472" class="uri">https://doi.org/10.2307/2786472</a>.</p>
+</div>
+<div>
 <p>Newman, M. E. J. 2005. “A Measure of Betweenness Centrality Based on Random Walks.” <em>Social Networks</em> 27 (1): 39–54. <a href="https://doi.org/10.1016/j.socnet.2004.11.009" class="uri">https://doi.org/10.1016/j.socnet.2004.11.009</a>.</p>
 </div>
 <div>
 <p>Noh, Jae Dong, and Heiko Rieger. 2004. “Random Walks on Complex Networks.” <em>Physical Review Letters</em> 92 (11). <a href="https://doi.org/10.1103/PhysRevLett.92.118701" class="uri">https://doi.org/10.1103/PhysRevLett.92.118701</a>.</p>
+</div>
+<div>
+<p>Page, Lawrence, Sergey Brin, Rajeev Motwani, and Terry Winograd. 1999. “The PageRank Citation Ranking: Bringing Order to the Web.” Technical report.</p>
 </div>
 <div>
 <p>Rochat, Yannick. 2009. “Closeness Centrality Extended to Unconnected Graphs: The Harmonic Centrality Index.”</p>
@@ -418,6 +545,9 @@ T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} 
 </div>
 <div>
 <p>Stephenson, Karen, and Marvin Zelen. 1989. “Rethinking Centrality: Methods and Examples.” <em>Social Networks</em> 11 (1): 1–37. <a href="https://doi.org/10.1016/0378-8733(89)90016-6" class="uri">https://doi.org/10.1016/0378-8733(89)90016-6</a>.</p>
+</div>
+<div>
+<p>Wei, Teh-Hsing. 1952. “The Algebraic Foundations of Ranking Theory.” PhD thesis, University of Cambridge.</p>
 </div>
 <div>
 <p>Yen, Luh, Marco Saerens, Amin Mantrach, and Masashi Shimbo. 2008. “A Family of Dissimilarity Measures Between Nodes Generalizing Both the Shortest-Path and the Commute-Time Distances.” In <em>Proceedings of the 14th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–93. KDD ’08. New York, NY, USA: ACM. <a href="https://doi.org/10.1145/1401890.1401984" class="uri">https://doi.org/10.1145/1401890.1401984</a>.</p>
@@ -499,6 +629,9 @@ T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} 
 <div id="ref-r-cceughci-09">
 <p>Rochat, Yannick. 2009. “Closeness Centrality Extended to Unconnected Graphs: The Harmonic Centrality Index.”</p>
 </div>
+<div id="ref-mm-dpusn-74">
+<p>Moxley, Robert L., and Nancy F. Moxley. 1974. “Determining Point-Centrality in Uncontrived Social Networks.” <em>Sociometry</em> 37 (1): 122–30. <a href="https://doi.org/10.2307/2786472" class="uri">https://doi.org/10.2307/2786472</a>.</p>
+</div>
 <div id="ref-d-rcn-06">
 <p>Dangalchev, Chavdar. 2006. “Residual Closeness in Networks.” <em>Physica A: Statistical Mechanics and Its Applications</em> 365 (2): 556–64. <a href="https://doi.org/10.1016/j.physa.2005.12.020" class="uri">https://doi.org/10.1016/j.physa.2005.12.020</a>.</p>
 </div>
@@ -516,6 +649,30 @@ T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} 
 </div>
 <div id="ref-sz-rcme-89">
 <p>Stephenson, Karen, and Marvin Zelen. 1989. “Rethinking Centrality: Methods and Examples.” <em>Social Networks</em> 11 (1): 1–37. <a href="https://doi.org/10.1016/0378-8733(89)90016-6" class="uri">https://doi.org/10.1016/0378-8733(89)90016-6</a>.</p>
+</div>
+<div id="ref-b-fwassci-72">
+<p>Bonacich, Phillip. 1972. “Factoring and Weighting Approaches to Status Scores and Clique Identification.” <em>The Journal of Mathematical Sociology</em> 2 (1): 113–20. <a href="https://doi.org/10.1080/0022250X.1972.9989806" class="uri">https://doi.org/10.1080/0022250X.1972.9989806</a>.</p>
+</div>
+<div id="ref-w-afrt-52">
+<p>Wei, Teh-Hsing. 1952. “The Algebraic Foundations of Ranking Theory.” PhD thesis, University of Cambridge.</p>
+</div>
+<div id="ref-b-tgsa-58">
+<p>Berge, Claude. 1958. <em>Théorie Des Graphes et Ses Applications</em>. Dunod, Paris.</p>
+</div>
+<div id="ref-pbmw-pcrbow-99">
+<p>Page, Lawrence, Sergey Brin, Rajeev Motwani, and Terry Winograd. 1999. “The PageRank Citation Ranking: Bringing Order to the Web.” Technical report.</p>
+</div>
+<div id="ref-fj-sio-90">
+<p>Friedkin, Noah E., and Eugene C. Johnsen. 1990. “Social Influence and Opinions.” <em>The Journal of Mathematical Sociology</em> 15 (3-4): 193–206. <a href="https://doi.org/10.1080/0022250X.1990.9990069" class="uri">https://doi.org/10.1080/0022250X.1990.9990069</a>.</p>
+</div>
+<div id="ref-fj-tso-14">
+<p>Friedkin, Noah E., and Eugene C. Johnsen. 1990. “Social Influence and Opinions.” <em>The Journal of Mathematical Sociology</em> 15 (3-4): 193–206. <a href="https://doi.org/10.1080/0022250X.1990.9990069" class="uri">https://doi.org/10.1080/0022250X.1990.9990069</a>.</p> 2014. “Two Steps to Obfuscation.” <em>Social Networks</em> 39 (October): 12–13. <a href="https://doi.org/10.1016/j.socnet.2014.03.008" class="uri">https://doi.org/10.1016/j.socnet.2014.03.008</a>.</p>
+</div>
+<div id="ref-k-nsidsa-53">
+<p>Katz, Leo. 1953. “A New Status Index Derived from Sociometric Analysis.” <em>Psychometrika</em> 18 (1): 39–43. <a href="https://doi.org/10.1007/BF02289026" class="uri">https://doi.org/10.1007/BF02289026</a>.</p>
+</div>
+<div id="ref-er-sccn-05">
+<p>Estrada, Ernesto, and Juan A. Rodríguez-Velázquez. 2005. “Subgraph Centrality in Complex Networks.” <em>Physical Review E</em> 71 (5): 056103. <a href="https://doi.org/10.1103/PhysRevE.71.056103" class="uri">https://doi.org/10.1103/PhysRevE.71.056103</a>.</p>
 </div>
 </div>
             </section>
