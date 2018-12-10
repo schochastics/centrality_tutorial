@@ -17,8 +17,8 @@ $$
 c_d(u) = \{v : \{u,v\} \in E\} = \lvert N(u) \rvert
 $$
 Degree centrality is a purely *local* measure since it only depends on the direct
-neighborhood of a node. A simple application example is popularity in friend-
-ship networks, i.e. "who has the most friends?". The definition of degree centrality can easily be 
+neighborhood of a node. A simple application example is popularity in friendship networks, 
+i.e. "who has the most friends?". The definition of degree centrality can easily be 
 adapted for directed and weighted networks. For directed networks,
 $$
 c_d^+(u)=\{v : (u,v) \in E\} = \lvert N^+(u) \rvert \quad \text{and} \quad 
@@ -143,7 +143,80 @@ particular order:
 - *BridgeRank* [@sam-bnfcmblsn-18]
 
 ## Closeness (and variants)
+Closeness centrality was first mentioned by @b-cptg-50 and later formally defined by
+@s-cig-66. Closeness is defined as the reciprocal of the sum of distances from a node 
+to all other nodes in the network, that is
+$$
+c_c(u)=\frac{1}{\sum\limits_{t \in V} dist(u,t)}.
+$$
+Vertices in a network are considered to be central if they have a small total
+distance to all other vertices in the network. By definition of graph-theoretic
+distances, closeness is ill-defined on unconnected graphs. A close variant ap-
+plicable to both connected and unconnected graphs is given by 
+$$
+c_{hc}(u)=\sum\limits_{t \in V}\frac{1}{dist(u,t)}.
+$$
+This variant was proposed by various researcher. Among the first are @gs-pnm-96 who refer to it as *power index*.
+@r-cceughci-09 later introduced it as *harmonic closeness*.
 
+As in the case of betweenness, many different variations of closeness have
+been proposed, mostly to correct for the fact that the "classical" closeness is not
+properly defined on unconnected networks. vf-irmeicrn-98 introduce *integration* as 
+an index which evaluates how well a vertex is integrated in a network. It is defined as
+$$
+c_{int}(u)=\frac{\sum_{t \in V} (diam(G)+1-dist(u,t))}{n-1},
+$$
+where $diam(G)$ is the diameter of the network. 
+
+@d-rcn-06 suggests 
+$$
+c_{rc}=\sum_{t \in V} \frac{1}{2^{dist(u,t)}}
+$$
+as another variant.
+
+There also exist at least two parametrized versions of closeness. @j-sen-10 introduced *decay centrality* as
+$$
+c_{dc}= \sum_{t \in V} \alpha^{dist(u,t)}
+$$
+where $\alpha \in (0,1)$. *Generalized closeness*, proposed by @abe-gbculg-17, is parametrized in a slightly different way. Formally,
+$$
+c_{gc}(u)=\sum_{t \in V} dist(u,t)^{-\alpha},
+$$
+where $\alpha\geq0$. The index apporaches classic closeness for $\alpha \to 1$ and converges
+to degree for $\alpha \to \infty$.
+
+@hh-ecn-95 introduced *eccentricity*, which does not rely on summing up all distances, but simply taking
+the inverse of the maximum, that is
+$$
+c_{ec}=\frac{1}{\max\{dist(u,t): t\in V\}}.
+$$
+
+While distances in networks are commonly defined via shortest paths, other concepts, such as *random walks* [@nr-rwcn-04], have also been used to design closeness-like indices. An index of particular interest 
+is *information centrality*, proposed by @sz-rcme-89. The index is based on
+counting all paths between two vertices and the edge overlap among these
+paths. Afterwards, a matrix is formed that contains the lengths
+of all paths on the diagonal and the overlap on the off diagonal entries. 
+This matrix is inverted and a harmonic mean of each row is formed.
+The authors interpret this procedure from an information-theoretic point
+view. They argue that the information content of a path is inversely propor-
+tional to the length of a path and the edge overlap represents a covariance
+among paths. Note that these calculations do not have to be
+performed explicitly but can be derived by inverting a matrix 
+$$
+C = ( L + J )^{−1},
+$$
+where $L$ is the Laplacian matrix and $J$ the matrix of all ones. With the matrix
+$C$, information centrality equates to
+
+$$
+c_{inf}(u)=\left(C_{uu}+ \frac{T-2R}{n}\right)^{-1},
+$$
+where
+$$
+T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} C_{uv}.
+$$
 ## Eigenvector (and variants)
 
 ## Others
+
+## References

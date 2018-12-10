@@ -25,7 +25,7 @@
 <meta name="author" content="David Schoch">
 
 
-<meta name="date" content="2018-12-07">
+<meta name="date" content="2018-12-10">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -72,8 +72,8 @@
 <li class="chapter" data-level="2.1" data-path="indices.html"><a href="indices.html#degree"><i class="fa fa-check"></i><b>2.1</b> Degree</a></li>
 <li class="chapter" data-level="2.2" data-path="indices.html"><a href="indices.html#betweenness-and-variants"><i class="fa fa-check"></i><b>2.2</b> Betweenness (and variants)</a></li>
 <li class="chapter" data-level="2.3" data-path="indices.html"><a href="indices.html#closeness-and-variants"><i class="fa fa-check"></i><b>2.3</b> Closeness (and variants)</a></li>
-<li class="chapter" data-level="2.4" data-path="indices.html"><a href="indices.html#eigenvector-and-variants"><i class="fa fa-check"></i><b>2.4</b> Eigenvector (and variants)</a></li>
-<li class="chapter" data-level="2.5" data-path="indices.html"><a href="indices.html#others"><i class="fa fa-check"></i><b>2.5</b> Others</a></li>
+<li class="chapter" data-level="2.4" data-path="indices.html"><a href="indices.html#others"><i class="fa fa-check"></i><b>2.4</b> Others</a></li>
+<li class="chapter" data-level="" data-path="indices.html"><a href="indices.html#references"><i class="fa fa-check"></i>References</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -257,14 +257,84 @@ particular order:</p>
 </div>
 <div id="closeness-and-variants" class="section level2">
 <h2><span class="header-section-number">2.3</span> Closeness (and variants)</h2>
-</div>
-<div id="eigenvector-and-variants" class="section level2">
-<h2><span class="header-section-number">2.4</span> Eigenvector (and variants)</h2>
+<p>Closeness centrality was first mentioned by <span class="citation">Bavelas (<a href="#ref-b-cptg-50">1950</a>)</span> and later formally defined by
+<span class="citation">Sabidussi (<a href="#ref-s-cig-66">1966</a>)</span>. Closeness is defined as the reciprocal of the sum of distances from a node
+to all other nodes in the network, that is
+<span class="math display">\[
+c_c(u)=\frac{1}{\sum\limits_{t \in V} dist(u,t)}.
+\]</span>
+Vertices in a network are considered to be central if they have a small total
+distance to all other vertices in the network. By definition of graph-theoretic
+distances, closeness is ill-defined on unconnected graphs. A close variant ap-
+plicable to both connected and unconnected graphs is given by
+<span class="math display">\[
+c_{hc}(u)=\sum\limits_{t \in V}\frac{1}{dist(u,t)}.
+\]</span>
+This variant was proposed by various researcher. Among the first are <span class="citation">Gil-Mendieta and Schmidt (<a href="#ref-gs-pnm-96">1996</a>)</span> who refer to it as <em>power index</em>.
+<span class="citation">Rochat (<a href="#ref-r-cceughci-09">2009</a>)</span> later introduced it as <em>harmonic closeness</em>.</p>
+<p>As in the case of betweenness, many different variations of closeness have
+been proposed, mostly to correct for the fact that the “classical” closeness is not
+properly defined on unconnected networks. vf-irmeicrn-98 introduce <em>integration</em> as
+an index which evaluates how well a vertex is integrated in a network. It is defined as
+<span class="math display">\[
+c_{int}(u)=\frac{\sum_{t \in V} (diam(G)+1-dist(u,t))}{n-1},
+\]</span>
+where <span class="math inline">\(diam(G)\)</span> is the diameter of the network.</p>
+<p><span class="citation">Dangalchev (<a href="#ref-d-rcn-06">2006</a>)</span> suggests
+<span class="math display">\[
+c_{rc}=\sum_{t \in V} \frac{1}{2^{dist(u,t)}}
+\]</span>
+as another variant.</p>
+<p>There also exist at least two parametrized versions of closeness. <span class="citation">Jackson (<a href="#ref-j-sen-10">2010</a>)</span> introduced <em>decay centrality</em> as
+<span class="math display">\[
+c_{dc}= \sum_{t \in V} \alpha^{dist(u,t)}
+\]</span>
+where <span class="math inline">\(\alpha \in (0,1)\)</span>. <em>Generalized closeness</em>, proposed by <span class="citation">Agneessens, Borgatti, and Everett (<a href="#ref-abe-gbculg-17">2017</a>)</span>, is parametrized in a slightly different way. Formally,
+<span class="math display">\[
+c_{gc}(u)=\sum_{t \in V} dist(u,t)^{-\alpha},
+\]</span>
+where <span class="math inline">\(\alpha\geq0\)</span>. The index apporaches classic closeness for <span class="math inline">\(\alpha \to 1\)</span> and converges
+to degree for <span class="math inline">\(\alpha \to \infty\)</span>.</p>
+<p><span class="citation">Hage and Harary (<a href="#ref-hh-ecn-95">1995</a>)</span> introduced <em>eccentricity</em>, which does not rely on summing up all distances, but simply taking
+the inverse of the maximum, that is
+<span class="math display">\[
+c_{ec}=\frac{1}{\max\{dist(u,t): t\in V\}}.
+\]</span></p>
+<p>While distances in networks are commonly defined via shortest paths, other concepts, such as <em>random walks</em> <span class="citation">(Noh and Rieger <a href="#ref-nr-rwcn-04">2004</a>)</span>, have also been used to design closeness-like indices. An index of particular interest
+is <em>information centrality</em>, proposed by <span class="citation">Stephenson and Zelen (<a href="#ref-sz-rcme-89">1989</a>)</span>. The index is based on
+counting all paths between two vertices and the edge overlap among these
+paths. Afterwards, a matrix is formed that contains the lengths
+of all paths on the diagonal and the overlap on the off diagonal entries.
+This matrix is inverted and a harmonic mean of each row is formed.
+The authors interpret this procedure from an information-theoretic point
+view. They argue that the information content of a path is inversely propor-
+tional to the length of a path and the edge overlap represents a covariance
+among paths. Note that these calculations do not have to be
+performed explicitly but can be derived by inverting a matrix
+<span class="math display">\[
+C = ( L + J )^{−1},
+\]</span>
+where <span class="math inline">\(L\)</span> is the Laplacian matrix and <span class="math inline">\(J\)</span> the matrix of all ones. With the matrix
+<span class="math inline">\(C\)</span>, information centrality equates to</p>
+<p><span class="math display">\[
+c_{inf}(u)=\left(C_{uu}+ \frac{T-2R}{n}\right)^{-1},
+\]</span>
+where
+<span class="math display">\[
+T=\sum\limits_{v \in V} C_{vv} \quad \text{ and } \quad R=\sum\limits_{v \in V} C_{uv}.
+\]</span>
+## Eigenvector (and variants)</p>
 </div>
 <div id="others" class="section level2">
-<h2><span class="header-section-number">2.5</span> Others</h2>
+<h2><span class="header-section-number">2.4</span> Others</h2>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
 
 <div id="refs" class="references">
+<div>
+<p>Agneessens, Filip, Stephen P. Borgatti, and Martin G. Everett. 2017. “Geodesic Based Centrality: Unifying the Local and the Global.” <em>Social Networks</em> 49 (May): 12–26. <a href="https://doi.org/10.1016/j.socnet.2016.09.005" class="uri">https://doi.org/10.1016/j.socnet.2016.09.005</a>.</p>
+</div>
 <div>
 <p>Agryzkov, Taras, Jose L. Oliver, Leandro Tortosa, and Jose Vicent. 2014. “A New Betweenness Centrality Measure Based on an Algorithm for Ranking the Nodes of a Network.” <em>Applied Mathematics and Computation</em> 244 (Supplement C): 467–78. <a href="https://doi.org/10.1016/j.amc.2014.07.026" class="uri">https://doi.org/10.1016/j.amc.2014.07.026</a>.</p>
 </div>
@@ -278,6 +348,9 @@ particular order:</p>
 <p>Avrachenkov, Konstantin, Nelly Litvak, Vasily Medyanikov, and Marina Sokol. 2013. “Alpha Current Flow Betweenness Centrality.” In <em>International Workshop on Algorithms and Models for the Web-Graph</em>, 106–17. Springer.</p>
 </div>
 <div>
+<p>Bavelas, Alex. 1950. “Communication Patterns in Task-Oriented Groups.” <em>The Journal of the Acoustical Society of America</em> 22 (6): 725–30. <a href="https://doi.org/10.1121/1.1906679" class="uri">https://doi.org/10.1121/1.1906679</a>.</p>
+</div>
+<div>
 <p>Borgatti, Stephen P., and Martin G. Everett. 2006. “A Graph-Theoretic Perspective on Centrality.” <em>Social Networks</em> 28 (4): 466–84. <a href="https://doi.org/10.1016/j.socnet.2005.11.005" class="uri">https://doi.org/10.1016/j.socnet.2005.11.005</a>.</p>
 </div>
 <div>
@@ -285,6 +358,9 @@ particular order:</p>
 </div>
 <div>
 <p>Brandes, Ulrik, and Daniel Fleischer. 2005. “Centrality Measures Based on Current Flow.” In <em>STACS</em>, 3404:533–44. Springer.</p>
+</div>
+<div>
+<p>Dangalchev, Chavdar. 2006. “Residual Closeness in Networks.” <em>Physica A: Statistical Mechanics and Its Applications</em> 365 (2): 556–64. <a href="https://doi.org/10.1016/j.physa.2005.12.020" class="uri">https://doi.org/10.1016/j.physa.2005.12.020</a>.</p>
 </div>
 <div>
 <p>Ercsey-Ravasz, Mária, Ryan N. Lichtenwalter, Nitesh V. Chawla, and Zoltán Toroczkai. 2012. “Range-Limited Centrality Measures in Complex Networks.” <em>Physical Review E</em> 85 (6): 066103. <a href="https://doi.org/10.1103/PhysRevE.85.066103" class="uri">https://doi.org/10.1103/PhysRevE.85.066103</a>.</p>
@@ -299,6 +375,15 @@ particular order:</p>
 <p>Freeman, Linton C., Stephen P. Borgatti, and Douglas R. White. 1991. “Centrality in Valued Graphs: A Measure of Betweenness Based on Network Flow.” <em>Social Networks</em> 13 (2): 141–54. <a href="https://doi.org/10.1016/0378-8733(91)90017-N" class="uri">https://doi.org/10.1016/0378-8733(91)90017-N</a>.</p>
 </div>
 <div>
+<p>Gil-Mendieta, Jorge, and Samuel Schmidt. 1996. “The Political Network in Mexico.” <em>Social Networks</em> 18 (4): 355–81. <a href="https://doi.org/10.1016/0378-8733(95)00281-2" class="uri">https://doi.org/10.1016/0378-8733(95)00281-2</a>.</p>
+</div>
+<div>
+<p>Hage, Per, and Frank Harary. 1995. “Eccentricity and Centrality in Networks.” <em>Social Networks</em> 17 (1): 57–63. <a href="https://doi.org/10.1016/0378-8733(94)00248-9" class="uri">https://doi.org/10.1016/0378-8733(94)00248-9</a>.</p>
+</div>
+<div>
+<p>Jackson, Matthew O. 2010. <em>Social and Economic Networks</em>. Princeton university press.</p>
+</div>
+<div>
 <p>Jensen, Pablo, Matteo Morini, Márton Karsai, Tommaso Venturini, Alessandro Vespignani, Mathieu Jacomy, Jean-Philippe Cointet, Pierre Mercklé, and Eric Fleury. 2016. “Detecting Global Bridges in Networks.” <em>Journal of Complex Networks</em> 4 (3): 319–29. <a href="https://doi.org/10.1093/comnet/cnv022" class="uri">https://doi.org/10.1093/comnet/cnv022</a>.</p>
 </div>
 <div>
@@ -311,6 +396,15 @@ particular order:</p>
 <p>Newman, M. E. J. 2005. “A Measure of Betweenness Centrality Based on Random Walks.” <em>Social Networks</em> 27 (1): 39–54. <a href="https://doi.org/10.1016/j.socnet.2004.11.009" class="uri">https://doi.org/10.1016/j.socnet.2004.11.009</a>.</p>
 </div>
 <div>
+<p>Noh, Jae Dong, and Heiko Rieger. 2004. “Random Walks on Complex Networks.” <em>Physical Review Letters</em> 92 (11). <a href="https://doi.org/10.1103/PhysRevLett.92.118701" class="uri">https://doi.org/10.1103/PhysRevLett.92.118701</a>.</p>
+</div>
+<div>
+<p>Rochat, Yannick. 2009. “Closeness Centrality Extended to Unconnected Graphs: The Harmonic Centrality Index.”</p>
+</div>
+<div>
+<p>Sabidussi, Gert. 1966. “The Centrality Index of a Graph.” <em>Psychometrika</em> 31 (4): 581–603. <a href="https://doi.org/10.1007/BF02289527" class="uri">https://doi.org/10.1007/BF02289527</a>.</p>
+</div>
+<div>
 <p>Saerens, Marco, Youssef Achbany, François Fouss, and Luh Yen. 2009. “Randomized Shortest-Path Problems: Two Related Models.” <em>Neural Computation</em> 21 (8): 2363–2404. <a href="https://doi.org/10.1162/neco.2009.11-07-643" class="uri">https://doi.org/10.1162/neco.2009.11-07-643</a>.</p>
 </div>
 <div>
@@ -321,6 +415,9 @@ particular order:</p>
 </div>
 <div>
 <p>Shimbel, Alfonso. 1953. “Structural Parameters of Communication Networks.” <em>The Bulletin of Mathematical Biophysics</em> 15 (4): 501–7. <a href="https://doi.org/10.1007/BF02476438" class="uri">https://doi.org/10.1007/BF02476438</a>.</p>
+</div>
+<div>
+<p>Stephenson, Karen, and Marvin Zelen. 1989. “Rethinking Centrality: Methods and Examples.” <em>Social Networks</em> 11 (1): 1–37. <a href="https://doi.org/10.1016/0378-8733(89)90016-6" class="uri">https://doi.org/10.1016/0378-8733(89)90016-6</a>.</p>
 </div>
 <div>
 <p>Yen, Luh, Marco Saerens, Amin Mantrach, and Masashi Shimbo. 2008. “A Family of Dissimilarity Measures Between Nodes Generalizing Both the Shortest-Path and the Commute-Time Distances.” In <em>Proceedings of the 14th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–93. KDD ’08. New York, NY, USA: ACM. <a href="https://doi.org/10.1145/1401890.1401984" class="uri">https://doi.org/10.1145/1401890.1401984</a>.</p>
@@ -389,6 +486,36 @@ particular order:</p>
 </div>
 <div id="ref-sam-bnfcmblsn-18">
 <p>Salavati, Chiman, Alireza Abdollahpouri, and Zhaleh Manbari. 2018. “BridgeRank: A Novel Fast Centrality Measure Based on Local Structure of the Network.” <em>Physica A: Statistical Mechanics and Its Applications</em> 496 (April): 635–53. <a href="https://doi.org/10.1016/j.physa.2017.12.087" class="uri">https://doi.org/10.1016/j.physa.2017.12.087</a>.</p>
+</div>
+<div id="ref-b-cptg-50">
+<p>Bavelas, Alex. 1950. “Communication Patterns in Task-Oriented Groups.” <em>The Journal of the Acoustical Society of America</em> 22 (6): 725–30. <a href="https://doi.org/10.1121/1.1906679" class="uri">https://doi.org/10.1121/1.1906679</a>.</p>
+</div>
+<div id="ref-s-cig-66">
+<p>Sabidussi, Gert. 1966. “The Centrality Index of a Graph.” <em>Psychometrika</em> 31 (4): 581–603. <a href="https://doi.org/10.1007/BF02289527" class="uri">https://doi.org/10.1007/BF02289527</a>.</p>
+</div>
+<div id="ref-gs-pnm-96">
+<p>Gil-Mendieta, Jorge, and Samuel Schmidt. 1996. “The Political Network in Mexico.” <em>Social Networks</em> 18 (4): 355–81. <a href="https://doi.org/10.1016/0378-8733(95)00281-2" class="uri">https://doi.org/10.1016/0378-8733(95)00281-2</a>.</p>
+</div>
+<div id="ref-r-cceughci-09">
+<p>Rochat, Yannick. 2009. “Closeness Centrality Extended to Unconnected Graphs: The Harmonic Centrality Index.”</p>
+</div>
+<div id="ref-d-rcn-06">
+<p>Dangalchev, Chavdar. 2006. “Residual Closeness in Networks.” <em>Physica A: Statistical Mechanics and Its Applications</em> 365 (2): 556–64. <a href="https://doi.org/10.1016/j.physa.2005.12.020" class="uri">https://doi.org/10.1016/j.physa.2005.12.020</a>.</p>
+</div>
+<div id="ref-j-sen-10">
+<p>Jackson, Matthew O. 2010. <em>Social and Economic Networks</em>. Princeton university press.</p>
+</div>
+<div id="ref-abe-gbculg-17">
+<p>Agneessens, Filip, Stephen P. Borgatti, and Martin G. Everett. 2017. “Geodesic Based Centrality: Unifying the Local and the Global.” <em>Social Networks</em> 49 (May): 12–26. <a href="https://doi.org/10.1016/j.socnet.2016.09.005" class="uri">https://doi.org/10.1016/j.socnet.2016.09.005</a>.</p>
+</div>
+<div id="ref-hh-ecn-95">
+<p>Hage, Per, and Frank Harary. 1995. “Eccentricity and Centrality in Networks.” <em>Social Networks</em> 17 (1): 57–63. <a href="https://doi.org/10.1016/0378-8733(94)00248-9" class="uri">https://doi.org/10.1016/0378-8733(94)00248-9</a>.</p>
+</div>
+<div id="ref-nr-rwcn-04">
+<p>Noh, Jae Dong, and Heiko Rieger. 2004. “Random Walks on Complex Networks.” <em>Physical Review Letters</em> 92 (11). <a href="https://doi.org/10.1103/PhysRevLett.92.118701" class="uri">https://doi.org/10.1103/PhysRevLett.92.118701</a>.</p>
+</div>
+<div id="ref-sz-rcme-89">
+<p>Stephenson, Karen, and Marvin Zelen. 1989. “Rethinking Centrality: Methods and Examples.” <em>Social Networks</em> 11 (1): 1–37. <a href="https://doi.org/10.1016/0378-8733(89)90016-6" class="uri">https://doi.org/10.1016/0378-8733(89)90016-6</a>.</p>
 </div>
 </div>
             </section>
